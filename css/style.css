@@ -465,25 +465,30 @@ h1, p { margin: 0; }
   width: min(100%, 594px);
   margin-inline: auto;
   padding: .6% 2.4% 4.4% 1%;
-  border-radius: 9% / 9%;
-  background: #0066a9;
 }
 
-/* 右下のドット柄 */
-.pcard::before {
-  content: "";
+/* 黄色い枠・青いフチ・ドット影は1枚の画像（waku.png）。
+   画像の青フチ(幅1282/高さ1297)がカードに重なり、ドット影は右下にはみ出す */
+.pcard__waku {
   position: absolute;
-  inset: 8% -2.6% -3.8% 10%;
+  left: 0;
+  top: 0;
   z-index: -1;
-  border-radius: inherit;
-  background: radial-gradient(circle, #3d8ad6 34%, transparent 37%) 0 0 / 9px 9px;
+  width: calc(100% * 1314 / 1282);
+  height: calc(100% * 1345 / 1297);
+  max-width: none;
 }
 
-.pcard__inner {
-  position: relative;
-  border-radius: 8% / 8%;
-  background: radial-gradient(ellipse at 50% 45%, #fffbd0 0%, #fff35a 45%, #ffe800 100%);
-}
+.pcard__inner { position: relative; }
+
+/* 縁日カードの中身：タイトル文字・風景写真・人物をカードの幅に対する割合で置く */
+.en__part { position: absolute; margin: 0; }
+.en__part, .en__part img { display: block; }
+.en__title img { width: 100%; }
+.en__photo { z-index: 0; }
+.en__title { z-index: 1; }
+.en__person { z-index: 2; }
+.en__text { z-index: 3; }
 
 .play { isolation: isolate; }
 
@@ -719,24 +724,49 @@ h1, p { margin: 0; }
    ========================================================== */
 .js .mkcard__img,
 .js .mkcard__wide,
-.js .pcard {
+.js .pcard__waku,
+.js .en__title,
+.js .en__photo,
+.js .en__text {
   opacity: 0;
   translate: 0 28px;
 }
 
 .js .mkcard.is-in .mkcard__img,
 .js .mkcard.is-in .mkcard__wide,
-.js .pcard.is-in {
+.js .pcard.is-in .pcard__waku,
+.js .pcard.is-in .en__title,
+.js .pcard.is-in .en__photo,
+.js .pcard.is-in .en__text {
   opacity: 1;
   translate: 0 0;
   transition:
-    opacity .9s ease-out,
-    translate .9s var(--ease-out);
+    opacity .9s ease-out var(--d0, 0s),
+    translate .9s var(--ease-out) var(--d0, 0s);
 }
 
 /* 縁日が横に並ぶときは、左から順に */
-.js .pcard.is-in:nth-child(2) { transition-delay: .15s; }
-.js .pcard.is-in:nth-child(3) { transition-delay: .3s; }
+.pcard:nth-child(2) { --d0: .15s; }
+.pcard:nth-child(3) { --d0: .3s; }
+
+/* 枠が先に出て、そのあとに文字と風景写真 */
+.js .pcard.is-in .en__title,
+.js .pcard.is-in .en__photo,
+.js .pcard.is-in .en__text { transition-delay: calc(var(--d0, 0s) + .6s); }
+
+/* 最後に人物が、半回転しながら下から上がってくる */
+.js .en__person {
+  opacity: 0;
+  transform: translateY(40%) rotate(-180deg) scale(.6);
+}
+
+.js .pcard.is-in .en__person {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity .5s ease-out calc(var(--d0, 0s) + 1.3s),
+    transform 1s var(--ease-back) calc(var(--d0, 0s) + 1.3s);
+}
 
 .mkcard__balloon { transform-origin: 20% 90%; }
 
@@ -753,7 +783,8 @@ h1, p { margin: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js .mkcard__img, .js .mkcard__wide, .js .pcard { opacity: 1; translate: none; }
+  .js .mkcard__img, .js .mkcard__wide, .js .pcard__waku, .js .en__title, .js .en__photo, .js .en__text { opacity: 1; translate: none; }
+  .js .en__person { opacity: 1; transform: none; }
   .js .mkcard.is-in .mkcard__balloon { animation: none; }
 }
 
