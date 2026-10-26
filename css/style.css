@@ -25,7 +25,9 @@ html {
 
 body {
   margin: 0;
-  background: var(--c-sky);
+  /* 下に引っぱったときの余白をフッターの黄色にそろえるため、全体の背景は黄色。
+     水色が必要な各セクションは、自分で水色の背景を持つ */
+  background: #fff000;
   color: var(--c-ink);
   font-family: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
   line-height: 1.6;
@@ -267,6 +269,7 @@ h1, p { margin: 0; }
    ========================================================== */
 .event {
   --gutter: 25px;
+  background: var(--c-sky);
   padding: 24px var(--gutter) 64px;
 }
 
@@ -680,7 +683,7 @@ h1, p { margin: 0; }
 .footer {
   display: grid;
   place-items: center;
-  padding: 40px 25px;
+  padding: 40px 25px calc(40px + env(safe-area-inset-bottom));
   background: #fff000;
   /* 下に引っぱったときも黄色が続くように、下へ黄色を伸ばしておく */
   box-shadow: 0 100vh 0 #fff000;
@@ -741,7 +744,7 @@ h1, p { margin: 0; }
   .access__addr,
   .access__parking { font-size: clamp(14px, 4.6cqw, 26px); }
 
-  .footer { padding-block: 56px; }
+  .footer { padding-block: 56px calc(56px + env(safe-area-inset-bottom)); }
 }
 
 /* 「今年もやってまいりました！」：矢印の向きに勢いよく飛び出す */
