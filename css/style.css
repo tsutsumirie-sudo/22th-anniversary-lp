@@ -14,14 +14,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html {
-  -webkit-text-size-adjust: 100%;
-  /* ページの外側（スマホで下に引っぱったときの余白）：
-     下はフッターと同じ黄色、上は水色（FVの背景）にする */
-  background:
-    linear-gradient(var(--c-sky), var(--c-sky)) 0 -100vh / 100% calc(100% + 100vh) no-repeat,
-    #fff000;
-}
+html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
@@ -682,8 +675,6 @@ h1, p { margin: 0; }
   place-items: center;
   padding: 40px 25px;
   background: #fff000;
-  /* 下に引っぱったときも黄色が続くように、下へ黄色を伸ばしておく */
-  box-shadow: 0 100vh 0 #fff000;
 }
 
 .footer__logo { width: min(74%, 420px); }
