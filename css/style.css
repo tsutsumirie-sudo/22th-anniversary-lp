@@ -1,0 +1,702 @@
+@charset "UTF-8";
+
+/* ==========================================================
+   Base
+   ========================================================== */
+:root {
+  --c-sky: #a9ddf7;
+  --c-navy: #0a4ea2;
+  --c-yellow: #ffe600;
+  --c-ink: #231815;
+  --ease-back: cubic-bezier(.34, 1.56, .64, 1);
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--c-sky);
+  color: var(--c-ink);
+  font-family: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  line-height: 1.6;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+h1, p { margin: 0; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ==========================================================
+   FV
+   デザインは FVイメージ(幅1076px) の座標をそのまま使う。
+   各パーツは style="--x --y --w" に座標と幅(px)を指定する。
+   ========================================================== */
+.fv {
+  /* 中身の幅：スマホは画面幅、PCは画面の高さに収まる大きさ（最大900px） */
+  --sw: max(min(100vw, 900px, 100svh * 1076 / 1200), min(100vw, 560px));
+  --sh: calc(var(--sw) * 1200 / 1076);
+  position: relative;
+  overflow: hidden;
+  background: var(--c-sky) url("../img/FV背景.png") center / cover no-repeat;
+}
+
+/* 背景：ドットの輪が中身の大きさに合うように、中身の幅を基準にサイズを決める。
+   その下に止まっている同じ背景を敷き、リード文のあたりまで背景が続くようにしている */
+.fv__bg {
+  position: absolute;
+  top: calc(var(--sh) * .47);
+  left: 50%;
+  width: calc(2 * hypot(50vw, var(--sh) * .55));
+  min-width: calc(var(--sw) * 1.6);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: url("../img/FV背景.png") center / cover no-repeat;
+  /* 外側はぼかして、下の止まっている背景になじませる */
+  -webkit-mask-image: radial-gradient(circle closest-side, #000 82%, transparent 100%);
+  mask-image: radial-gradient(circle closest-side, #000 82%, transparent 100%);
+  animation: fv-spin 120s linear infinite;
+}
+
+@keyframes fv-spin { to { rotate: 360deg; } }
+
+.fv__stage {
+  position: relative;
+  width: var(--sw);
+  aspect-ratio: 1076 / 1200;
+  margin-inline: auto;
+  container-type: inline-size;
+}
+
+.fv-item {
+  --u: calc(100cqw / 1076);
+  position: absolute;
+  left: calc(var(--x) * var(--u));
+  top: calc(var(--y) * var(--u));
+  width: calc(var(--w) * var(--u));
+}
+
+.fv-item img { width: 100%; }
+.fv-ribbon img { clip-path: var(--clip); }
+
+/* 切り抜き写真の白フチ（チラシのステッカー風） */
+.fv-outline {
+  --o: calc(4 * var(--u));
+  filter:
+    drop-shadow(var(--o) 0 0 #fff)
+    drop-shadow(calc(var(--o) * -1) 0 0 #fff)
+    drop-shadow(0 var(--o) 0 #fff)
+    drop-shadow(0 calc(var(--o) * -1) 0 #fff);
+}
+
+/* --- リード文 --- */
+.fv__lead {
+  --u: calc(var(--sw) / 1076);
+  position: relative;
+  width: var(--sw);
+  margin: calc(-10 * var(--u)) auto 0;
+  padding: 0 calc(40 * var(--u)) calc(90 * var(--u));
+  color: var(--c-navy);
+  font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "BIZ UDPGothic", sans-serif;
+  font-weight: 900;
+  font-size: max(calc(30 * var(--u) + 2px), 16px);
+  /* 白フチ */
+  text-shadow:
+     2px  0   0 #fff, -2px  0   0 #fff,  0  2px 0 #fff,  0 -2px 0 #fff,
+     2px  2px 0 #fff, -2px  2px 0 #fff,  2px -2px 0 #fff, -2px -2px 0 #fff,
+     1px  2px 0 #fff, -1px  2px 0 #fff,  1px -2px 0 #fff, -1px -2px 0 #fff,
+     2px  1px 0 #fff, -2px  1px 0 #fff,  2px -1px 0 #fff, -2px -1px 0 #fff;
+  line-height: 1.85;
+  letter-spacing: .04em;
+  text-align: center;
+}
+
+/* スマホだけ改行 */
+.u-sp { display: none; }
+
+@media (max-width: 600px) {
+  .u-sp { display: inline; }
+}
+
+/* --- 会場帯のテキスト --- */
+.fv-venue__text {
+  position: absolute;
+  left: 4.1%;
+  top: 59%;
+  display: grid;
+  gap: calc(6 * var(--u));
+  color: #fff;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+
+.fv-venue__name {
+  color: var(--c-yellow);
+  font-size: calc(33 * var(--u));
+}
+
+.fv-venue__name small {
+  color: #fff;
+  font-size: calc(22 * var(--u));
+}
+
+.fv-venue__addr {
+  font-size: calc(24 * var(--u));
+  font-weight: 700;
+}
+
+/* ==========================================================
+   FV アニメーション
+   昨年(21周年)の絵コンテと同じ流れ：
+   写真が中央から1枚ずつ飛び出す → ロゴ(雲＋タイトル)がズーム → 全体
+   → 最後にリボン・星が中央から飛び出して止まる
+   ========================================================== */
+.js .fv-item { opacity: 0; }
+
+/* 写真・リボン・星：中央から飛び出す（--dx --dy は main.js が設定） */
+.is-play .fv-pop { animation: fv-pop .75s var(--ease-back) var(--d) both; }
+.is-play .fv-burst { animation: fv-pop .7s var(--ease-out) var(--d) both; }
+
+@keyframes fv-pop {
+  0%   { opacity: 0; transform: translate(var(--dx, 0), var(--dy, 0)) scale(.15) rotate(-12deg); }
+  25%  { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}
+
+/* ロゴ：ズームイン */
+.is-play .fv-logo { animation: fv-zoom .8s var(--ease-back) var(--d) both; }
+
+@keyframes fv-zoom {
+  0%   { opacity: 0; transform: scale(.3); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}
+
+/* 会場：下からせり上がる */
+.is-play .fv-venue { animation: fv-rise .7s var(--ease-out) var(--d) both; }
+
+@keyframes fv-rise {
+  from { opacity: 0; transform: translateY(calc(60 * var(--u))); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* 家族：その場でポンと出る */
+.is-play .fv-bounce {
+  transform-origin: 50% 100%;
+  animation: fv-bounce .55s var(--ease-back) var(--d) both;
+}
+
+@keyframes fv-bounce {
+  0%   { opacity: 0; transform: scale(0); }
+  60%  { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* リード文：最後にふわっと */
+.js .fv__lead { opacity: 0; }
+.is-play .fv__lead { animation: fv-rise .8s var(--ease-out) 3.6s both; }
+
+/* ふきだし：ポンと出て、ときどき揺れる */
+.is-play .fv-balloon {
+  transform-origin: 20% 90%;
+  animation:
+    fv-balloon .6s var(--ease-back) var(--d) both,
+    fv-wiggle 4s ease-in-out calc(var(--d) + 3s) infinite;
+}
+
+@keyframes fv-balloon {
+  from { opacity: 0; transform: scale(0) rotate(-20deg); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes fv-wiggle {
+  0%, 82%, 100% { transform: none; }
+  86% { transform: rotate(-5deg) scale(1.04); }
+  90% { transform: rotate(4deg) scale(1.04); }
+  94% { transform: rotate(-2deg); }
+}
+
+/* 登場後：写真がふわふわ浮く */
+.fv-float { animation: fv-float 3.2s ease-in-out infinite; }
+.fv-pop:nth-child(3) .fv-float { animation-delay: -.8s; }
+.fv-pop:nth-child(4) .fv-float { animation-delay: -1.6s; }
+.fv-float--car { animation: fv-car 1.6s ease-in-out infinite; }
+
+@keyframes fv-float {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -6px; }
+}
+
+@keyframes fv-car {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  50%      { translate: 0 -3px; rotate: -.6deg; }
+}
+
+/* 動きを減らす設定の人には静止画で表示 */
+@media (prefers-reduced-motion: reduce) {
+  .fv *, .fv__bg { animation: none !important; }
+  .js .fv-item, .js .fv__lead { opacity: 1; }
+}
+
+/* ==========================================================
+   イベント内容
+   ========================================================== */
+.event {
+  --gutter: 25px;
+  padding: 24px var(--gutter) 64px;
+}
+
+/* 青リボンの見出し（スマホ 330×60） */
+.ribbon-title {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 330px;
+  max-width: 100%;
+  height: 60px;
+  margin: 0 auto 28px;
+  color: #fff;
+  font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", sans-serif;
+  font-weight: 900;
+  font-size: 26px;
+  letter-spacing: .12em;
+  line-height: 1;
+}
+
+.ribbon-title svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ribbon-title span { position: relative; }
+
+/* ----------------------------------------------------------
+   キッチンカー
+   座標は見本(幅633px)基準。各パーツは --x --y --w で配置。
+   見出し・各日のブロックはそれぞれの幅に合わせて拡大縮小する
+   ---------------------------------------------------------- */
+.kc {
+  width: min(100%, 594px);
+  margin-inline: auto;
+  padding-block: 1% 5%;
+  border-radius: 28px;
+  background: #ee7800;
+  container-type: inline-size;
+}
+
+.kc__head,
+.kc-day {
+  position: relative;
+  aspect-ratio: 633 / var(--h);
+  container-type: inline-size;
+}
+
+.kc__head > *,
+.kc-day > *,
+.kc-day__body > * {
+  --k: calc(100cqw / 633);
+  position: absolute;
+  left: calc(var(--x) * var(--k));
+  top: calc(var(--y) * var(--k));
+  width: calc(var(--w) * var(--k));
+  margin: 0;
+}
+
+.kc__title img,
+.kc-day__badge img,
+.kc-photo > img { display: block; width: 100%; height: auto; }
+
+/* 写真の影（画像の影に重ねて濃くする） */
+.kc-photo > img { filter: drop-shadow(calc(4 * var(--k)) calc(6 * var(--k)) calc(6 * var(--k)) rgba(0, 0, 0, .4)); }
+
+.kc__head   { --h: 505; }
+.kc__title  { --x: 22;  --y: 0;   --w: 606; z-index: 1; }
+.kc__family { --x: 68;  --y: 230; --w: 140; z-index: 1; }
+.kc__car    { --x: 184; --y: 203; --w: 437; }
+
+/* 日付・商品名・写真のかたまり */
+.kc-day__body {
+  --x: 0;
+  --y: 0;
+  --w: 633;
+  height: 100%;
+  transform-origin: 50% 0;
+}
+
+/* 日付バッジは写真より手前 */
+.kc-day__badge,
+.kc-day__sub { z-index: 2; }
+
+.kc-day--1 { --h: 715; }
+.kc-day--1 .kc-day__badge { --x: 38;  --y: 9;   --w: 500; }
+.kc-photo--yakisoba       { --x: 83;  --y: 60;  --w: 432; }
+.kc-day--1 .kc-day__sub   { --x: 293; --y: 318; --w: 287; }
+.kc-photo--takoyaki       { --x: 145; --y: 370; --w: 411; }
+.kc-day--1 .kc-day__shop  { --y: 615; }
+
+.kc-day--2 { --h: 630; }
+.kc-day--2 .kc-day__badge { --x: 38;  --y: 4;   --w: 507; }
+.kc-photo--waffle         { --x: 67;  --y: 76;  --w: 549; }
+.kc-day--2 .kc-day__shop  { --y: 532; }
+
+.kc-day--3 { --h: 640; }
+.kc-day--3 .kc-day__badge { --x: 38;  --y: 0;   --w: 538; }
+.kc-photo--donut          { --x: 63;  --y: 100; --w: 536; }
+.kc-day--3 .kc-day__shop  { --y: 548; }
+
+/* 店名：昨年と同じく写真の下に、白文字＋黒フチ */
+.kc-day__shop {
+  --x: 0;
+  --w: 633;
+  --s: calc(5 * var(--k));
+  color: #fff;
+  font-family: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", sans-serif;
+  font-weight: 800;
+  font-size: calc(58 * var(--k));
+  line-height: 1.2;
+  letter-spacing: .02em;
+  text-align: center;
+  text-shadow:
+    var(--s) 0 0 var(--c-ink), calc(var(--s) * -1) 0 0 var(--c-ink),
+    0 var(--s) 0 var(--c-ink), 0 calc(var(--s) * -1) 0 var(--c-ink),
+    calc(var(--s) * .7) calc(var(--s) * .7) 0 var(--c-ink), calc(var(--s) * -.7) calc(var(--s) * .7) 0 var(--c-ink),
+    calc(var(--s) * .7) calc(var(--s) * -.7) 0 var(--c-ink), calc(var(--s) * -.7) calc(var(--s) * -.7) 0 var(--c-ink);
+}
+
+.kc__note {
+  margin: 0;
+  color: var(--c-ink);
+  font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", sans-serif;
+  font-weight: 700;
+  font-size: clamp(15px, 5cqw, 28px);
+  text-align: center;
+}
+
+/* 写真：画面の下から30%の位置まで来たら、半回転しながら下から上がってくる */
+.js .kc-photo > * {
+  opacity: 0;
+  transform: translateY(60%) rotate(-180deg) scale(.6);
+}
+
+.js .kc-photo.is-in > * {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity .5s ease-out,
+    transform 1s var(--ease-back);
+}
+
+/* iPad以上：1〜3日目を横に並べる */
+@media (min-width: 768px) {
+  .event { padding-top: 48px; }
+
+  .ribbon-title {
+    width: 440px;
+    height: 80px;
+    font-size: 34px;
+  }
+
+  .kc {
+    width: min(100%, 1100px);
+    padding: 2% 3% 3%;
+    border-radius: 40px;
+  }
+
+  .kc__head {
+    width: min(100%, 460px);
+    margin-inline: auto;
+  }
+
+  .kc-days {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5%;
+    align-items: start;
+    margin-top: 2%;
+  }
+
+  /* 日付・商品名・写真を115%に拡大（店名はその下へ） */
+  .kc-day__body { transform: scale(1.15); }
+  .kc-day--1 { --h: 810; }
+  .kc-day--2 { --h: 713; }
+  .kc-day--3 { --h: 725; }
+  .kc-day--1 .kc-day__shop { --y: 710; }
+  .kc-day--2 .kc-day__shop { --y: 615; }
+  .kc-day--3 .kc-day__shop { --y: 633; }
+
+  .kc__note {
+    margin-top: 2%;
+    font-size: clamp(15px, 2cqw, 22px);
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .kc-photo > * { opacity: 1; transform: none; }
+}
+
+/* ==========================================================
+   モルック体験・縁日
+   黄色いカードの青いフチの左右を、キッチンカーのオレンジ枠にそろえる
+   ========================================================== */
+.play {
+  --gutter: 25px;
+  display: grid;
+  gap: 48px;
+  padding: 40px var(--gutter) 72px;
+  background: #5bb8e6;
+}
+
+/* 黄色いカード：モルック体験の画像と同じ形（上と左は細い青、右と下は太い青） */
+.pcard {
+  position: relative;
+  width: min(100%, 594px);
+  margin-inline: auto;
+  padding: .6% 2.4% 4.4% 1%;
+  border-radius: 9% / 9%;
+  background: #0066a9;
+}
+
+/* 右下のドット柄 */
+.pcard::before {
+  content: "";
+  position: absolute;
+  inset: 8% -2.6% -3.8% 10%;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(circle, #3d8ad6 34%, transparent 37%) 0 0 / 9px 9px;
+}
+
+.pcard__inner {
+  position: relative;
+  border-radius: 8% / 8%;
+  background: radial-gradient(ellipse at 50% 45%, #fffbd0 0%, #fff35a 45%, #ffe800 100%);
+}
+
+.play { isolation: isolate; }
+
+/* --- モルック体験 ---
+   画像の青い枠（左端x=3〜右端x=1060／画像幅1092）をオレンジ枠の幅にそろえる */
+.mkcard {
+  position: relative;
+  width: min(100%, 594px);
+  margin: 22% auto 0;
+}
+
+.mkcard__img {
+  width: calc(100% * 1092 / 1057);
+  max-width: none;
+  margin-left: calc(100% * -3 / 1057);
+}
+
+.mkcard__balloon {
+  position: absolute;
+  left: 29.5%;
+  top: -20%;
+  z-index: 1;
+  width: 70.9%;
+}
+
+/* iPad以上の横長画像（スマホでは使わない）
+   画像の青い枠（左端x=10〜右端x=1215／画像幅1254）をカードの幅にそろえる */
+.mkcard__wide {
+  display: none;
+  width: calc(100% * 1254 / 1206);
+  max-width: none;
+  margin-left: calc(100% * -10 / 1206);
+}
+
+/* --- 縁日 --- */
+.play__ennichi {
+  display: grid;
+  gap: 48px;
+}
+
+.en {
+  --m: calc(100cqw / 559);
+  position: relative;
+  aspect-ratio: var(--ar);
+  container-type: inline-size;
+}
+
+.en h3 { margin: 0; }
+.en h3 img { width: 100%; }
+
+.en__text {
+  --m: calc(100cqw / 559);
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  margin: 0;
+  color: var(--c-ink);
+  /* モルック体験の「小さなお子さまも…」と同じ丸ゴシック＋白フチ */
+  --s: 2px;
+  font-family: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", sans-serif;
+  font-weight: 800;
+  /* スマホ：iPhone SE(375px)で16px → iPhone 16 Pro(402px)以上で19px */
+  font-size: clamp(16px, 16px + (100vw - 375px) * 3 / 27, 19px);
+  line-height: 1.4;
+  letter-spacing: .1em;
+  white-space: nowrap;
+  text-shadow:
+    var(--s) 0 0 #fff, calc(var(--s) * -1) 0 0 #fff, 0 var(--s) 0 #fff, 0 calc(var(--s) * -1) 0 #fff,
+    calc(var(--s) * .7) calc(var(--s) * .7) 0 #fff, calc(var(--s) * -.7) calc(var(--s) * .7) 0 #fff,
+    calc(var(--s) * .7) calc(var(--s) * -.7) 0 #fff, calc(var(--s) * -.7) calc(var(--s) * -.7) 0 #fff;
+}
+
+/* iPad以上：モルックは中身を中央に、縁日は3つ横並び */
+@media (min-width: 768px) {
+  .play { padding-top: 56px; }
+
+  .pcard { width: min(100%, 1100px); }
+
+  /* モルック：見本の横長レイアウト。青いフチの左右が、
+     サイコロチャレンジ・ヨーヨー釣りのカードの真ん中に来る幅（3列の1列分を引いた幅） */
+  .mkcard {
+    --mw: calc(min(100vw - 2 * var(--gutter), 1100px) * (1 - (1 - .05) / 3));
+    width: var(--mw);
+    margin: 0 auto;
+  }
+
+  .mkcard__balloon,
+  .mkcard__img { display: none; }
+
+  .mkcard__wide { display: block; }
+
+  .play__ennichi {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5%;
+    width: min(100%, 1100px);
+    margin-inline: auto;
+  }
+
+  .play__ennichi .pcard { width: 100%; }
+
+  .en__text { font-size: 16px; }
+
+  /* 16pxだとカードからはみ出すので、右端にそろえて字間を詰める */
+  .en__text--yoyo {
+    left: auto;
+    right: 3%;
+    top: 24%;
+    letter-spacing: .04em;
+  }
+}
+
+/* ==========================================================
+   住まいの相談会・会場案内・フッター
+   背景はキッチンカーのセクションと同じ水色
+   ========================================================== */
+.info {
+  --gutter: 25px;
+  padding: 56px var(--gutter) 64px;
+  background: var(--c-sky);
+}
+
+.info__inner {
+  display: grid;
+  gap: 56px;
+  width: min(100%, 594px);
+  margin-inline: auto;
+}
+
+/* 相談会：画像の枠の左端（x=47）〜黄色い側面の右端（x=592）を、オレンジ枠の幅にそろえる（画像幅626） */
+.soudan img {
+  width: calc(100% * 626 / 545);
+  max-width: none;
+  margin-left: calc(100% * -47 / 545);
+}
+
+/* 地図・会場案内 */
+.access {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  container-type: inline-size;
+}
+
+.access__map {
+  width: calc(100% * 1087 / 1075);
+  max-width: none;
+  margin-left: calc(100% * 12 / 1075);
+}
+
+.access__addr {
+  margin: 4px 0 0;
+  color: var(--c-ink);
+  font-weight: 900;
+  font-size: clamp(18px, 6cqw, 30px);
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+
+.access__parking {
+  width: 82%;
+  margin: 0;
+  padding: .45em 0 .5em;
+  border-radius: 999px;
+  background: var(--c-ink);
+  color: var(--c-yellow);
+  font-weight: 900;
+  font-size: clamp(18px, 6cqw, 30px);
+  letter-spacing: .04em;
+  text-align: center;
+}
+
+/* フッター */
+.footer {
+  display: grid;
+  place-items: center;
+  padding: 40px 25px;
+  background: #fff000;
+}
+
+.footer__logo { width: min(74%, 420px); }
+
+/* iPad以上：相談会と地図を横並び */
+@media (min-width: 768px) {
+  .info__inner {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 5%;
+    width: min(100%, 1100px);
+  }
+
+  /* 地図側の高さを相談会の枠に合わせる：
+     上端＝枠の上端（画像のy=29）、下端＝黄色い側面の下端（y=498） */
+  .access {
+    contain: size;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5cqw;
+    padding: calc(100% * 29 / 545) 0 calc(100% * 2 / 545);
+  }
+
+  .access__map {
+    flex: 1 1 0;
+    min-height: 0;
+    width: auto;
+    max-width: 100%;
+    margin-left: 0;
+    object-fit: contain;
+  }
+
+  .access__addr,
+  .access__parking { font-size: clamp(14px, 4.6cqw, 26px); }
+
+  .footer { padding-block: 56px; }
+}
