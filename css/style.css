@@ -160,8 +160,6 @@ h1, p { margin: 0; }
   font-size: calc(26.4 * var(--u));
   font-weight: 700;
   line-height: 1.2;
-  color: #fff;
-  text-decoration: none;
 }
 
 /* ==========================================================
@@ -702,8 +700,15 @@ h1, p { margin: 0; }
     padding: calc(100% * 29 / 545) 0 calc(100% * 2 / 545);
   }
 
-  .access__map {
+  .access__maplink {
+    display: flex;
     flex: 1 1 0;
+    justify-content: center;
+    min-height: 0;
+  }
+
+  .access__map {
+    height: 100%;
     min-height: 0;
     width: auto;
     max-width: 100%;
@@ -802,3 +807,16 @@ h1, p { margin: 0; }
 /* フッターのロゴはリンク */
 .footer__link { display: block; width: min(74%, 420px); }
 .footer__link .footer__logo { display: block; width: 100%; }
+
+/* FVの黒い枠：枠全体（画像の下の約45%）をタップするとGoogleマップが開く */
+.fv-venue__map {
+  position: absolute;
+  left: 0;
+  top: 55%;
+  z-index: 2;
+  width: 100%;
+  height: 45%;
+}
+
+/* 下の地図：タップするとGoogleマップが開く */
+.access__maplink { display: block; width: 100%; }
