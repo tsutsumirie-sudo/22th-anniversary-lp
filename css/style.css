@@ -46,27 +46,9 @@ h1, p { margin: 0; }
   --sh: calc(var(--sw) * 1370 / 1076);
   position: relative;
   overflow: hidden;
-  background: var(--c-sky) url("../img/FV背景.png") center / cover no-repeat;
+  /* 背景：回さずに止めておく。ドットの輪の中心が FVイメージの y=625 に来るように置く */
+  background: var(--c-sky) url("../img/FV背景.png") 50% calc(var(--sw) * (625 / 1076 - .495 * 1.357 * 1.8)) / calc(var(--sw) * 1.8) auto no-repeat;
 }
-
-/* 背景：ドットの輪が中身の大きさに合うように、中身の幅を基準にサイズを決める。
-   その下に止まっている同じ背景を敷き、リード文のあたりまで背景が続くようにしている */
-.fv__bg {
-  position: absolute;
-  top: calc(var(--sw) * 625 / 1076);
-  left: 50%;
-  width: calc(2 * hypot(50vw, var(--sh) * .55));
-  min-width: calc(var(--sw) * 1.6);
-  aspect-ratio: 1;
-  translate: -50% -50%;
-  background: url("../img/FV背景.png") center / cover no-repeat;
-  /* 外側はぼかして、下の止まっている背景になじませる */
-  -webkit-mask-image: radial-gradient(circle closest-side, #000 82%, transparent 100%);
-  mask-image: radial-gradient(circle closest-side, #000 82%, transparent 100%);
-  animation: fv-spin 120s linear infinite;
-}
-
-@keyframes fv-spin { to { rotate: 360deg; } }
 
 .fv__stage {
   position: relative;
@@ -205,7 +187,7 @@ h1, p { margin: 0; }
 
 /* リード文：最後にふわっと */
 .js .fv__lead { opacity: 0; }
-.is-play .fv__lead { animation: fv-rise .8s var(--ease-out) 3.6s both; }
+.is-play .fv__lead { animation: fv-rise .8s var(--ease-out) 5.2s both; }
 
 /* ふきだし：ポンと出て、ときどき揺れる */
 .is-play .fv-balloon {
@@ -245,7 +227,7 @@ h1, p { margin: 0; }
 
 /* 動きを減らす設定の人には静止画で表示 */
 @media (prefers-reduced-motion: reduce) {
-  .fv *, .fv__bg { animation: none !important; }
+  .fv * { animation: none !important; }
   .js .fv-item, .js .fv__lead { opacity: 1; }
 }
 
