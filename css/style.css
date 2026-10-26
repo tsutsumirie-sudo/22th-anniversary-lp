@@ -42,8 +42,8 @@ h1, p { margin: 0; }
    ========================================================== */
 .fv {
   /* 中身の幅：スマホは画面幅、PCは画面の高さに収まる大きさ（最大900px） */
-  --sw: max(min(100vw, 900px, 100svh * 1076 / 1200), min(100vw, 560px));
-  --sh: calc(var(--sw) * 1200 / 1076);
+  --sw: max(min(100vw, 900px, 100svh * 1076 / 1370), min(100vw, 560px));
+  --sh: calc(var(--sw) * 1370 / 1076);
   position: relative;
   overflow: hidden;
   background: var(--c-sky) url("../img/FV背景.png") center / cover no-repeat;
@@ -53,7 +53,7 @@ h1, p { margin: 0; }
    その下に止まっている同じ背景を敷き、リード文のあたりまで背景が続くようにしている */
 .fv__bg {
   position: absolute;
-  top: calc(var(--sh) * .47);
+  top: calc(var(--sw) * 625 / 1076);
   left: 50%;
   width: calc(2 * hypot(50vw, var(--sh) * .55));
   min-width: calc(var(--sw) * 1.6);
@@ -71,7 +71,7 @@ h1, p { margin: 0; }
 .fv__stage {
   position: relative;
   width: var(--sw);
-  aspect-ratio: 1076 / 1200;
+  aspect-ratio: 1076 / 1370;
   margin-inline: auto;
   container-type: inline-size;
 }
@@ -105,8 +105,9 @@ h1, p { margin: 0; }
   margin: calc(-10 * var(--u)) auto 0;
   padding: 0 calc(40 * var(--u)) calc(90 * var(--u));
   color: var(--c-navy);
-  font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "BIZ UDPGothic", sans-serif;
-  font-weight: 900;
+  /* サイコロチャレンジの小さい文(.en__text)と同じ丸ゴシック */
+  font-family: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", sans-serif;
+  font-weight: 800;
   font-size: max(calc(30 * var(--u) + 2px), 16px);
   /* 白フチ */
   text-shadow:
@@ -114,8 +115,8 @@ h1, p { margin: 0; }
      2px  2px 0 #fff, -2px  2px 0 #fff,  2px -2px 0 #fff, -2px -2px 0 #fff,
      1px  2px 0 #fff, -1px  2px 0 #fff,  1px -2px 0 #fff, -1px -2px 0 #fff,
      2px  1px 0 #fff, -2px  1px 0 #fff,  2px -1px 0 #fff, -2px -1px 0 #fff;
-  line-height: 1.85;
-  letter-spacing: .04em;
+  line-height: 1.55;
+  letter-spacing: .08em;
   text-align: center;
 }
 
@@ -699,4 +700,15 @@ h1, p { margin: 0; }
   .access__parking { font-size: clamp(14px, 4.6cqw, 26px); }
 
   .footer { padding-block: 56px; }
+}
+
+/* 「今年もやってまいりました！」：矢印の向きに勢いよく飛び出す */
+.is-play .fv-arrow {
+  animation: fv-arrow .7s var(--ease-back) var(--d) both;
+}
+
+@keyframes fv-arrow {
+  0%   { opacity: 0; transform: translate(calc(-14 * var(--u)), calc(30 * var(--u))) scale(.1) rotate(-8deg); }
+  30%  { opacity: 1; }
+  100% { opacity: 1; transform: none; }
 }
