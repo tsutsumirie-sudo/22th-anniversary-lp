@@ -757,7 +757,7 @@ h1, p { margin: 0; }
 /* 最後に人物が、半回転しながら下から上がってくる */
 .js .en__person {
   opacity: 0;
-  transform: translateY(40%) rotate(-180deg) scale(.6);
+  transform: translateY(40%) rotate(-100deg) scale(.6);
 }
 
 .js .pcard.is-in .en__person {
