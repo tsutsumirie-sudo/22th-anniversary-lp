@@ -150,9 +150,18 @@ h1, p { margin: 0; }
   font-size: calc(22 * var(--u));
 }
 
+/* 住所：110%に大きくして、右の「お客様駐車場完備」と縦の中心をそろえる
+   （「お客様駐車場完備」の中心は、帯の画像の上から 242.7、この文字ブロックの上端は 171.1 の位置） */
 .fv-venue__addr {
-  font-size: calc(24 * var(--u));
+  position: absolute;
+  left: 0;
+  top: calc(71.6 * var(--u));
+  translate: 0 -50%;
+  font-size: calc(26.4 * var(--u));
   font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  text-decoration: none;
 }
 
 /* ==========================================================
@@ -637,6 +646,8 @@ h1, p { margin: 0; }
   max-width: none;
   margin-left: calc(100% * 12 / 1075);
 }
+
+.access__addr a { color: inherit; text-decoration: none; }
 
 .access__addr {
   margin: 4px 0 0;
