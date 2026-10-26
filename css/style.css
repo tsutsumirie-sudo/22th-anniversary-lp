@@ -50,6 +50,23 @@ h1, p { margin: 0; }
   background: var(--c-sky) url("../img/FV背景.png") 50% calc(var(--sw) * (625 / 1076 - .495 * 1.357 * 1.8)) / calc(var(--sw) * 1.8) auto no-repeat;
 }
 
+/* 回るドット柄：下の止まっている背景と同じ大きさ・位置に重ねて、
+   下の背景のドットの輪が透けて見えないようにしている（外側だけぼかしてなじませる） */
+.fv__bg {
+  position: absolute;
+  top: calc(var(--sw) * 625 / 1076);
+  left: 50%;
+  width: calc(var(--sw) * 1.8);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: url("../img/FV背景.png") 50% 48% / cover no-repeat;
+  -webkit-mask-image: radial-gradient(circle closest-side, #000 85%, transparent 100%);
+  mask-image: radial-gradient(circle closest-side, #000 85%, transparent 100%);
+  animation: fv-spin 120s linear infinite;
+}
+
+@keyframes fv-spin { to { rotate: 360deg; } }
+
 .fv__stage {
   position: relative;
   width: var(--sw);
@@ -227,7 +244,7 @@ h1, p { margin: 0; }
 
 /* 動きを減らす設定の人には静止画で表示 */
 @media (prefers-reduced-motion: reduce) {
-  .fv * { animation: none !important; }
+  .fv *, .fv__bg { animation: none !important; }
   .js .fv-item, .js .fv__lead { opacity: 1; }
 }
 
