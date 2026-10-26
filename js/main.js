@@ -60,3 +60,28 @@
   };
   window.addEventListener('scroll', revealAtBottom, { passive: true });
 })();
+
+// モルック体験・縁日：画面の下から15%の位置まで来たら、ふわっと登場
+(() => {
+  const cards = document.querySelectorAll('.mkcard, .pcard');
+  if (!cards.length || !('IntersectionObserver' in window)) {
+    cards.forEach((el) => el.classList.add('is-in'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-in');
+      io.unobserve(entry.target);
+    });
+  }, { rootMargin: '0px 0px -15% 0px' });
+  cards.forEach((el) => io.observe(el));
+
+  // ページの最後まで来たら、まだ出ていないカードも表示する
+  window.addEventListener('scroll', () => {
+    if (window.innerHeight + window.scrollY < document.documentElement.scrollHeight - 2) return;
+    cards.forEach((el) => {
+      if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('is-in');
+    });
+  }, { passive: true });
+})();
