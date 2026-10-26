@@ -711,3 +711,52 @@ h1, p { margin: 0; }
   30%  { opacity: 1; }
   100% { opacity: 1; transform: none; }
 }
+
+/* ==========================================================
+   モルック体験・縁日：画面に入ったらふわっと登場
+   ピンクのふきだしは最初から置いてあり、
+   モルックの枠が位置に着いたら、バウンドで一瞬大きくなる
+   ========================================================== */
+.js .mkcard__img,
+.js .mkcard__wide,
+.js .pcard {
+  opacity: 0;
+  translate: 0 28px;
+}
+
+.js .mkcard.is-in .mkcard__img,
+.js .mkcard.is-in .mkcard__wide,
+.js .pcard.is-in {
+  opacity: 1;
+  translate: 0 0;
+  transition:
+    opacity .9s ease-out,
+    translate .9s var(--ease-out);
+}
+
+/* 縁日が横に並ぶときは、左から順に */
+.js .pcard.is-in:nth-child(2) { transition-delay: .15s; }
+.js .pcard.is-in:nth-child(3) { transition-delay: .3s; }
+
+.mkcard__balloon { transform-origin: 20% 90%; }
+
+/* 枠が着いた（約.9秒後）あとに、ポンッと大きくなって戻る */
+.js .mkcard.is-in .mkcard__balloon {
+  animation: balloon-bounce .8s var(--ease-back) .9s both;
+}
+
+@keyframes balloon-bounce {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.22); }
+  65%  { transform: scale(.95); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .mkcard__img, .js .mkcard__wide, .js .pcard { opacity: 1; translate: none; }
+  .js .mkcard.is-in .mkcard__balloon { animation: none; }
+}
+
+/* フッターのロゴはリンク */
+.footer__link { display: block; width: min(74%, 420px); }
+.footer__link .footer__logo { display: block; width: 100%; }
