@@ -84,7 +84,11 @@ h1, p { margin: 0; }
 }
 
 .fv-item img { width: 100%; }
-.fv-ribbon img { clip-path: var(--clip); }
+.fv-confetti {
+  pointer-events: none;
+  /* 画像の右下にあるピンクの流れ星は、参考の見本にないので出さない */
+  clip-path: polygon(0 0, 100% 0, 100% 86%, 72% 86%, 72% 100%, 0 100%);
+}
 
 /* 切り抜き写真の白フチ（チラシのステッカー風） */
 .fv-outline {
