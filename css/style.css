@@ -84,9 +84,10 @@ h1, p { margin: 0; }
 }
 
 .fv-item img { width: 100%; }
-.fv-confetti {
-  pointer-events: none;
-  /* 画像の右下にあるピンクの流れ星は、参考の見本にないので出さない */
+.fv-confetti { pointer-events: none; }
+
+/* 画像の右下にあるピンクの流れ星は、参考の見本にないので出さない */
+.fv-confetti--main {
   clip-path: polygon(0 0, 100% 0, 100% 86%, 72% 86%, 72% 100%, 0 100%);
 }
 
